@@ -22,7 +22,14 @@ public class ProdutoController {
   public ResponseEntity<List<Produto>> getAllProdutos() {
     return ResponseEntity.ok(produtoRepository.findAll());
   }
-
+  @GetMapping("/nome")
+  public ResponseEntity<List<Produto>> getProdutosPorNome(@RequestParam String nome) {
+      List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCase(nome);
+      if (produtos.isEmpty()) {
+          return ResponseEntity.notFound().build();
+      }
+      return ResponseEntity.ok(produtos);
+  }
   @GetMapping("/{id}")
   public ResponseEntity<Produto> getProdutoById(@PathVariable Long id) {
     return produtoRepository.findById(id)
