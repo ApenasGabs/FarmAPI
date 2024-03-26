@@ -22,19 +22,31 @@ public class ProdutoController {
   public ResponseEntity<List<Produto>> getAllProdutos() {
     return ResponseEntity.ok(produtoRepository.findAll());
   }
+
   @GetMapping("/nome")
-  public ResponseEntity<List<Produto>> getProdutosPorNome(@RequestParam String nome) {
-      List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCase(nome);
+  public ResponseEntity<List<Produto>> getProdutosPorNome(@RequestParam String nomeProduto) {
+      List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCase(nomeProduto);
       if (produtos.isEmpty()) {
           return ResponseEntity.notFound().build();
       }
       return ResponseEntity.ok(produtos);
   }
+  
+
   @GetMapping("/{id}")
   public ResponseEntity<Produto> getProdutoById(@PathVariable Long id) {
     return produtoRepository.findById(id)
         .map(response -> ResponseEntity.ok(response))
         .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping("/categoria/{categoriaNome}")
+  public ResponseEntity<List<Produto>> getProdutosPorCategoriaNome(@PathVariable String categoriaNome) {
+    List<Produto> produtos = produtoRepository.findByCategoriaNome(categoriaNome);
+    if (produtos.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(produtos);
   }
 
   @PostMapping
